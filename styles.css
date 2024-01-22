@@ -1,0 +1,91 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: black;
+}
+
+img {
+  width: 100%;
+}
+
+main {
+  margin: 60px;
+  padding: 50px 0;
+  display: grid;
+  grid-template-columns: 350px 350px 350px 350px;
+  justify-content: center;
+  gap: 30px;
+}
+
+#logo {
+  padding: 0.75rem;
+}
+
+#logo i {
+  font-size: 1.5rem;
+}
+
+#logo a {
+  font-size: 1.5rem;
+}
+
+.card-movie {
+  width: 100%;
+  height: auto;
+  background-color: rgb(231, 231, 231);
+  border-radius: 5px;
+  box-shadow: 1px 4px 6px 2px rgba(0, 0, 0, 0.164);
+}
+
+.card-movie img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 5px 5px 0 0;
+}
+
+.info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 2rem 1rem 1rem;
+  max-width: 100%;
+}
+
+.title {
+  font-size: 1.5rem;
+  padding-bottom: 0.75rem;
+}
+
+.date {
+  color: grey;
+  font-weight: bold;
+}
+
+.rate {
+  display: flex;
+  max-width: 100%;
+  justify-content: end;
+  align-items: center;
+  color: white;
+  margin-top: 1rem;
+}
+
+.good-rating {
+  border-radius: 5px;
+  padding: 0 6px;
+  background-color: rgb(43, 136, 0);
+}
+
+.medium-rating {
+  border-radius: 5px;
+  padding: 0 6px;
+  background-color: rgb(248, 223, 0);
+}
+
+.bad-rating {
+  border-radius: 5px;
+  padding: 0 6px;
+  background-color: rgb(177, 0, 0);
+}
