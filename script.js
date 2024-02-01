@@ -1,103 +1,106 @@
 const apiKey = "02dd4e4bf4792803c07f78fb41cab31b"; 
 
+let currentPage = 1;
 
-const discoverUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=1`;
+const discoverUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${currentPage}`;
 
-fetch(discoverUrl)
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Erro na solicitação de descoberta da API");
-    }
-    return response.json();
-  })
-  .then((data) => {
-    
-    if (data.results && data.results.length > 0) {
-      
-      const movieIds = data.results.map((movie) => movie.id);
 
-      
-      return Promise.all(
-        movieIds.map((movieId) => {
-          const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=en-US`;
-          const imagesUrl = `https://api.themoviedb.org/3/movie/${movieId}/images?api_key=${apiKey}`;
+function fetchMovies(page) {
+  const discoverUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${page}`;
 
-          const detailsPromise = fetch(movieDetailsUrl).then((response) =>
-            response.json()
-          );
-          const imagesPromise = fetch(imagesUrl).then((response) =>
-            response.json()
-          );
-
-          return Promise.all([detailsPromise, imagesPromise]);
-        })
-      );
-    } else {
-      throw new Error("Nenhum resultado encontrado na descoberta de filmes.");
-    }
-  })
-  .then((resultsArray) => {
-   
-    console.log(resultsArray);
-
-    
-    resultsArray.forEach(([detailsData, imagesData]) => {
-      const title = detailsData.title;
-      const releaseDate = detailsData.release_date;
-      const rating = detailsData.vote_average;
-
-      const ratingPercent = Math.round(rating * 10);
-
-      
-      const movieContainer = document.createElement("div");
-      movieContainer.classList.add("card-movie");
-
-      const posterElement = document.createElement("img");
-
-      const infoContainer = document.createElement("div");
-      infoContainer.classList.add("info-container");
-
-      const titleElement = document.createElement("h2");
-      titleElement.classList.add("title");
-      titleElement.textContent = `${title}`;
-
-      const releaseDateElement = document.createElement("p");
-      releaseDateElement.classList.add("date");
-      releaseDateElement.textContent = `${releaseDate}`;
-
-      const rateContainer = document.createElement("div");
-      const ratingElement = document.createElement("span");
-      rateContainer.classList.add("rate");
-      if (ratingPercent < 50) {
-        ratingElement.classList.add("bad-rating");
-      } else if (ratingPercent >= 50 && ratingPercent <= 70) {
-        ratingElement.classList.add("medium-rating");
-      } else if (ratingPercent > 70 && ratingPercent <= 100) {
-        ratingElement.classList.add("good-rating");
+  fetch(discoverUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Erro na solicitação de descoberta da API");
       }
-      ratingElement.textContent = `${ratingPercent}%`;
+      return response.json();
+    })
+    .then((data) => {
+      if (data.results && data.results.length > 0) {
+        const movieIds = data.results.map((movie) => movie.id);
 
-      const posters = imagesData.posters;
-      if (posters && posters.length > 0) {
-        const posterUrl = `https://image.tmdb.org/t/p/original${posters[0].file_path}`;
-        posterElement.src = posterUrl;
-        posterElement.alt = `Pôster para ${title}`;
+        return Promise.all(
+          movieIds.map((movieId) => {
+            const movieDetailsUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=en-US`;
+            const imagesUrl = `https://api.themoviedb.org/3/movie/${movieId}/images?api_key=${apiKey}`;
+
+            const detailsPromise = fetch(movieDetailsUrl).then((response) =>
+              response.json()
+            );
+            const imagesPromise = fetch(imagesUrl).then((response) =>
+              response.json()
+            );
+
+            return Promise.all([detailsPromise, imagesPromise]);
+          })
+        );
+      } else {
+        throw new Error("Nenhum resultado encontrado na descoberta de filmes.");
       }
+    })
+    .then((resultsArray) => {
+      console.log(resultsArray);
 
       
-      movieContainer.appendChild(posterElement);
-      infoContainer.appendChild(titleElement);
-      infoContainer.appendChild(releaseDateElement);
-      infoContainer.appendChild(rateContainer);
-      rateContainer.appendChild(ratingElement);
-      movieContainer.appendChild(infoContainer);
 
-      
-      const moviesContainer = document.getElementById("moviesContainer");
-      moviesContainer.appendChild(movieContainer);
-    });
-  })
-  .catch((error) => console.error(error));
+      resultsArray.forEach(([detailsData, imagesData]) => {
+        const title = detailsData.title;
+        const releaseDate = detailsData.release_date;
+        const rating = detailsData.vote_average;
+
+        const ratingPercent = Math.round(rating * 10);
+
+        const movieContainer = document.createElement("div");
+        movieContainer.classList.add("card-movie");
+
+        const posterElement = document.createElement("img");
+
+        const infoContainer = document.createElement("div");
+        infoContainer.classList.add("info-container");
+
+        const titleElement = document.createElement("h2");
+        titleElement.classList.add("title");
+        titleElement.textContent = `${title}`;
+
+        const releaseDateElement = document.createElement("p");
+        releaseDateElement.classList.add("date");
+        releaseDateElement.textContent = `${releaseDate}`;
+
+        const rateContainer = document.createElement("div");
+        const ratingElement = document.createElement("span");
+        rateContainer.classList.add("rate");
+        if (ratingPercent < 50) {
+          ratingElement.classList.add("bg-warning");
+        } else if (ratingPercent >= 50 && ratingPercent <= 70) {
+          ratingElement.classList.add("bg-warning");
+        } else if (ratingPercent > 70 && ratingPercent <= 100) {
+          ratingElement.classList.add("bg-success");
+        }
+        ratingElement.textContent = `${ratingPercent}%`;
+
+        const posters = imagesData.posters;
+        if (posters && posters.length > 0) {
+          const posterUrl = `https://image.tmdb.org/t/p/original${posters[0].file_path}`;
+          posterElement.src = posterUrl;
+          posterElement.alt = `Pôster para ${title}`;
+        }
+
+        movieContainer.appendChild(posterElement);
+        infoContainer.appendChild(titleElement);
+        infoContainer.appendChild(releaseDateElement);
+        infoContainer.appendChild(rateContainer);
+        rateContainer.appendChild(ratingElement);
+        movieContainer.appendChild(infoContainer);
+
+        const moviesContainer = document.getElementById("moviesContainer");
+        moviesContainer.appendChild(movieContainer);
+      });
+    })
+    .catch((error) => console.error(error));
+}
+
+// Chama fetchMovies com a página inicial
+fetchMovies(currentPage);
 
 function searchMovies(query) {
   const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&page=1&query=${query}`;
@@ -177,11 +180,11 @@ function searchMovies(query) {
         const ratingElement = document.createElement("span");
         rateContainer.classList.add("rate");
         if (ratingPercent < 50) {
-          ratingElement.classList.add("bad-rating");
+          ratingElement.classList.add("badge-danger");
         } else if (ratingPercent >= 50 && ratingPercent <= 70) {
-          ratingElement.classList.add("medium-rating");
+          ratingElement.classList.add("badge-warning");
         } else if (ratingPercent > 70 && ratingPercent <= 100) {
-          ratingElement.classList.add("good-rating");
+          ratingElement.classList.add("badge-success");
         }
         ratingElement.textContent = `${ratingPercent}%`;
 
@@ -203,11 +206,24 @@ function searchMovies(query) {
 
         
         const moviesContainer = document.getElementById("moviesContainer");
+        moviesContainer.classList.add("col-6");
         moviesContainer.appendChild(movieContainer);
       });
     })
     .catch((error) => console.error(error));
-}
+  }
+
+// Configuração de botões de navegação
+/*document.getElementById("prevPageBtn").addEventListener("click", function () {
+  if (currentPage > 1) {
+    fetchMovies(currentPage - 1);
+  }
+});
+
+document.getElementById("nextPageBtn").addEventListener("click", function () {
+  fetchMovies(currentPage + 1);
+});*/
+
 
 document
   .getElementById("searchBtn")
