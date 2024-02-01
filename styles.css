@@ -26,6 +26,21 @@ main {
   display: none;
 }
 
+.container-message-error {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.container-message-error i {
+  font-size: 32px;
+}
+
+#btnCloseModal:hover {
+  background-color: black;
+  color: white;
+}
+
 @media (max-width: 1400px) {
   main {
     display: grid;

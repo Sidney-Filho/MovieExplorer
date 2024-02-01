@@ -1,9 +1,8 @@
-const apiKey = "02dd4e4bf4792803c07f78fb41cab31b"; 
+const apiKey = "02dd4e4bf4792803c07f78fb41cab31b";
 
 let currentPage = 1;
 
 const discoverUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${currentPage}`;
-
 
 function fetchMovies(page) {
   const discoverUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${page}`;
@@ -40,8 +39,6 @@ function fetchMovies(page) {
     })
     .then((resultsArray) => {
       console.log(resultsArray);
-
-      
 
       resultsArray.forEach(([detailsData, imagesData]) => {
         const title = detailsData.title;
@@ -113,13 +110,10 @@ function searchMovies(query) {
       return response.json();
     })
     .then((data) => {
-      
       const moviesContainer = document.getElementById("moviesContainer");
       moviesContainer.innerHTML = "";
 
-      
       if (data.results && data.results.length > 0) {
-        
         const searchResults = data.results.map((movie) => movie.id);
 
         return Promise.all(
@@ -138,28 +132,36 @@ function searchMovies(query) {
           })
         );
       } else {
-        const body = document.querySelector('body');
-        const containerMessage = document.createElement('div');
-        containerMessage.classList.add('messageError');
-        const newMessageError = document.createElement('h2');
-        newMessageError.innerText = 'Nenhum filme encontrado na pesquisa!';
+        const body = document.querySelector("body");
+        const containerMessage = document.createElement("div");
+        containerMessage.classList.add("container-message-error")
+        containerMessage.classList.add("messageError");
+        const newMessageError = document.createElement("h2");
+        newMessageError.innerText = "Nothing to show here :/";
+        
+        const iconError = document.createElement("i");
+        iconError.classList.add("fa-solid");
+        iconError.classList.add("fa-0");
+
+        const resultsError = document.createElement("span");
+        resultsError.innerText = "Results";
+
         containerMessage.appendChild(newMessageError);
+        containerMessage.appendChild(iconError);
+        containerMessage.appendChild(resultsError);
         body.appendChild(containerMessage);
 
         throw new Error("Nenhum resultado encontrado na pesquisa de filmes.");
       }
     })
     .then((resultsArray) => {
-     
       resultsArray.forEach(([detailsData, imagesData]) => {
-        
         const title = detailsData.title;
         const releaseDate = detailsData.release_date;
         const rating = detailsData.vote_average;
 
         const ratingPercent = Math.round(rating * 10);
 
-        
         const movieContainer = document.createElement("div");
         movieContainer.classList.add("card-movie");
 
@@ -180,15 +182,14 @@ function searchMovies(query) {
         const ratingElement = document.createElement("span");
         rateContainer.classList.add("rate");
         if (ratingPercent < 50) {
-          ratingElement.classList.add("badge-danger");
+          ratingElement.classList.add("bg-danger");
         } else if (ratingPercent >= 50 && ratingPercent <= 70) {
-          ratingElement.classList.add("badge-warning");
+          ratingElement.classList.add("bg-warning");
         } else if (ratingPercent > 70 && ratingPercent <= 100) {
-          ratingElement.classList.add("badge-success");
+          ratingElement.classList.add("bg-success");
         }
         ratingElement.textContent = `${ratingPercent}%`;
 
-        
         const posters = imagesData.posters;
         if (posters && posters.length > 0) {
           const posterUrl = `https://image.tmdb.org/t/p/original${posters[0].file_path}`;
@@ -196,7 +197,6 @@ function searchMovies(query) {
           posterElement.alt = `Pôster para ${title}`;
         }
 
-        
         movieContainer.appendChild(posterElement);
         infoContainer.appendChild(titleElement);
         infoContainer.appendChild(releaseDateElement);
@@ -204,14 +204,12 @@ function searchMovies(query) {
         rateContainer.appendChild(ratingElement);
         movieContainer.appendChild(infoContainer);
 
-        
         const moviesContainer = document.getElementById("moviesContainer");
-        moviesContainer.classList.add("col-6");
         moviesContainer.appendChild(movieContainer);
       });
     })
     .catch((error) => console.error(error));
-  }
+}
 
 // Configuração de botões de navegação
 /*document.getElementById("prevPageBtn").addEventListener("click", function () {
@@ -231,7 +229,15 @@ document
     event.preventDefault();
     const searchTerm = document.getElementById("searchInput").value.trim();
 
-    if (searchTerm !== "") {
+
+    if (searchTerm === "") {
+      const myModal = new bootstrap.Modal(
+        document.getElementById("exampleModal")
+        );
+        
+      myModal.show();
+    } else {
       searchMovies(searchTerm);
+      
     }
   });
