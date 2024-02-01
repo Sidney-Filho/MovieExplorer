@@ -3,7 +3,8 @@
 ## Preview image
 <img alt="projeto Movie Explorer" src="./img/preview.png" width="100%">
 
-Projeto realizado com JavaScript, trabalhando com requisições vindas de uma API chamada The Movie DataBase, assim que abre o site ele mostra os filmes mais recentes e suas caracteristicas, tais como Titulo, Data de lançamento, e Aceitação do público.
+## Descrição
+Projeto realizado com JavaScript, trabalhando com requisições vindas de uma API chamada The Movie DataBase<a href="https://developer.themoviedb.org/docs/getting-started"> (Ver documentação) </a>, assim que o site abre ele mostra os filmes mais recentes e suas caracteristicas, tais como Titulo, Data de lançamento, e Aceitação do público.
 
 
 ## Tecnologias e recursos
