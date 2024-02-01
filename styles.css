@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: black;
+  background-color: white;
 }
 
 img {
@@ -88,4 +88,10 @@ main {
   border-radius: 5px;
   padding: 0 6px;
   background-color: rgb(177, 0, 0);
+}
+
+.messageError {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

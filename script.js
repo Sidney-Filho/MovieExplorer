@@ -135,6 +135,14 @@ function searchMovies(query) {
           })
         );
       } else {
+        const body = document.querySelector('body');
+        const containerMessage = document.createElement('div');
+        containerMessage.classList.add('messageError');
+        const newMessageError = document.createElement('h2');
+        newMessageError.innerText = 'Nenhum filme encontrado na pesquisa!';
+        containerMessage.appendChild(newMessageError);
+        body.appendChild(containerMessage);
+
         throw new Error("Nenhum resultado encontrado na pesquisa de filmes.");
       }
     })
