@@ -17,7 +17,7 @@ main {
   margin: 60px;
   padding: 50px 0;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 20% 20% 20% 20%;
   justify-content: center;
   gap: 30px;
 }
@@ -29,27 +29,35 @@ main {
 @media (max-width: 1400px) {
   main {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 25% 25% 25%;
   }
 }
 
 @media (max-width: 1050px) {
   main {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 35% 35%;
+    margin: 30px;
+    padding: 25px 0;
   }
 }
 
 @media (max-width: 800px) {
   main {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 75%;
+    margin: 30px;
+    padding: 25px 0;
   }
   #searchContainer {
     display: none !important;
   }
   .container-fluid {
     display: flex;
+    gap: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }
 
