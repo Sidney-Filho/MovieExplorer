@@ -4,6 +4,12 @@
   box-sizing: border-box;
 }
 
+header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+
 body {
   overflow-x: hidden;
   background-color: white;
@@ -22,10 +28,6 @@ main {
   gap: 30px;
 }
 
-.container-fluid {
-  display: none;
-}
-
 .container-message-error {
   display: flex;
   flex-direction: column;
@@ -41,6 +43,18 @@ main {
   color: white;
 }
 
+#searchContainer {
+  display: flex;
+}
+
+.containerToSearch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row-reverse;
+  gap: 20px;
+}
+
 @media (max-width: 1400px) {
   main {
     display: grid;
@@ -52,7 +66,7 @@ main {
   main {
     display: grid;
     grid-template-columns: 35% 35%;
-    margin: 30px;
+    margin: 80px 30px;
     padding: 25px 0;
   }
 }
@@ -61,19 +75,40 @@ main {
   main {
     display: grid;
     grid-template-columns: 75%;
-    margin: 30px;
+    margin: 80px 30px;
     padding: 25px 0;
   }
-  #searchContainer {
-    display: none !important;
+  #btnMenu {
+    display: flex !important;
   }
-  .container-fluid {
-    display: flex;
-    gap: 10px;
-    flex-direction: column;
+  #searchContainer {
+    display: none;
+    height: 100px;
+  }
+  .active {
+    display: flex !important;
     justify-content: center;
     align-items: center;
+    height: 0;
   }
+}
+
+#btnMenu {
+  display: none;
+}
+
+#prevPage:disabled {
+  opacity: 50%;
+  transition: all 0.2s;
+}
+
+#prevPage:enabled {
+  opacity: 100%;
+  transition: all 0.2s;
+}
+
+.row > * {
+  width: auto;
 }
 
 #logo {
@@ -127,6 +162,7 @@ main {
   align-items: center;
   color: white;
   margin-top: 1rem;
+  font-weight: bold;
 }
 
 .rate span {
@@ -140,11 +176,14 @@ main {
   align-items: center;
 }
 
-/*footer {
+footer {
   display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
   justify-content: center;
   align-items: center;
-  gap: 15px;
   margin-bottom: 20px;
 }
 
@@ -152,4 +191,7 @@ footer button {
   border: none;
   padding: 10px;
   border-radius: 5px;
-}*/
+  margin: 10px;
+  background-color: #212529;
+  color: white;
+}

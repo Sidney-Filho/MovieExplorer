@@ -1,11 +1,9 @@
 const apiKey = "02dd4e4bf4792803c07f78fb41cab31b";
-
 let currentPage = 1;
-
-const discoverUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${currentPage}`;
+const resultsPerPage = 24;
 
 function fetchMovies(page) {
-  const discoverUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${page}`;
+  const discoverUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&page=${page}&per_page=${resultsPerPage}`;
 
   fetch(discoverUrl)
     .then((response) => {
@@ -15,6 +13,11 @@ function fetchMovies(page) {
       return response.json();
     })
     .then((data) => {
+      const moviesContainer = document.getElementById("moviesContainer");
+
+      // Limpe os filmes existentes antes de adicionar novos filmes
+      moviesContainer.innerHTML = "";
+
       if (data.results && data.results.length > 0) {
         const movieIds = data.results.map((movie) => movie.id);
 
@@ -38,8 +41,6 @@ function fetchMovies(page) {
       }
     })
     .then((resultsArray) => {
-      console.log(resultsArray);
-
       resultsArray.forEach(([detailsData, imagesData]) => {
         const title = detailsData.title;
         const releaseDate = detailsData.release_date;
@@ -91,13 +92,49 @@ function fetchMovies(page) {
 
         const moviesContainer = document.getElementById("moviesContainer");
         moviesContainer.appendChild(movieContainer);
+        updatePaginationUI();
       });
     })
     .catch((error) => console.error(error));
 }
 
-// Chama fetchMovies com a página inicial
-fetchMovies(currentPage);
+function changePage(change) {
+  currentPage += change;
+  fetchMovies(currentPage);
+}
+
+function updatePaginationUI() {
+  const prevPageButton = document.getElementById("prevPage");
+  const nextPageButton = document.getElementById("nextPage");
+
+  prevPageButton.disabled = currentPage === 1;
+  nextPageButton.disabled = false; // Assuming there's always a next page
+}
+
+document
+  .getElementById("prevPage")
+  .addEventListener("click", () => changePage(-1));
+document
+  .getElementById("nextPage")
+  .addEventListener("click", () => changePage(1));
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Inicialize a página com filmes
+  fetchMovies(currentPage);
+
+  // Event listener para abrir os detalhes do filme em uma nova página
+  const moviesContainer = document.getElementById("moviesContainer");
+  moviesContainer.addEventListener("click", (event) => {
+    const movieLink = event.target.closest("a[data-movie-id]");
+
+    if (movieLink) {
+      const movieId = movieLink.getAttribute("data-movie-id");
+      if (movieId) {
+        window.open(`movie-details.html?movieId=${movieId}`, "_blank");
+      }
+    }
+  });
+});
 
 function searchMovies(query) {
   const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&page=1&query=${query}`;
@@ -134,11 +171,11 @@ function searchMovies(query) {
       } else {
         const body = document.querySelector("body");
         const containerMessage = document.createElement("div");
-        containerMessage.classList.add("container-message-error")
+        containerMessage.classList.add("container-message-error");
         containerMessage.classList.add("messageError");
         const newMessageError = document.createElement("h2");
         newMessageError.innerText = "Nothing to show here :/";
-        
+
         const iconError = document.createElement("i");
         iconError.classList.add("fa-solid");
         iconError.classList.add("fa-0");
@@ -207,20 +244,12 @@ function searchMovies(query) {
         const moviesContainer = document.getElementById("moviesContainer");
         moviesContainer.appendChild(movieContainer);
       });
+      updatePaginationUI();
     })
     .catch((error) => console.error(error));
 }
 
-// Configuração de botões de navegação
-/*document.getElementById("prevPageBtn").addEventListener("click", function () {
-  if (currentPage > 1) {
-    fetchMovies(currentPage - 1);
-  }
-});
-
-document.getElementById("nextPageBtn").addEventListener("click", function () {
-  fetchMovies(currentPage + 1);
-});*/
+const modalElement = document.getElementById("exampleModal");
 
 
 document
@@ -229,15 +258,15 @@ document
     event.preventDefault();
     const searchTerm = document.getElementById("searchInput").value.trim();
 
-
     if (searchTerm === "") {
-      const myModal = new bootstrap.Modal(
-        document.getElementById("exampleModal")
-        );
-        
-      myModal.show();
+      if (modalElement) {
+        const myModal = new bootstrap.Modal(modalElement);
+        myModal.show();
+      } else {
+        console.error("Elemento modal não encontrado.");
+      }
+      
     } else {
       searchMovies(searchTerm);
-      
     }
   });
