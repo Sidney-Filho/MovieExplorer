@@ -49,6 +49,7 @@ function fetchMovies(page) {
         const ratingPercent = Math.round(rating * 10);
 
         const movieContainer = document.createElement("div");
+        movieContainer.setAttribute("data-movie-id", detailsData.id);
         movieContainer.classList.add("card-movie");
 
         const posterElement = document.createElement("img");
@@ -92,6 +93,22 @@ function fetchMovies(page) {
 
         const moviesContainer = document.getElementById("moviesContainer");
         moviesContainer.appendChild(movieContainer);
+
+        // ... (código existente)
+
+        // Event listener para abrir os detalhes do filme em uma nova página
+        moviesContainer.addEventListener("click", (event) => {
+          const movieContainer = event.target.closest(".card-movie");
+
+          if (movieContainer) {
+            const movieId = movieContainer.getAttribute("data-movie-id");
+            if (movieId) {
+              // Redirecione para a página de detalhes do filme com o ID do filme
+              window.location.href = `movie-details.html?movieId=${movieId}`;
+            }
+          }
+        });
+
         updatePaginationUI();
       });
     })
@@ -118,23 +135,8 @@ document
   .getElementById("nextPage")
   .addEventListener("click", () => changePage(1));
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Inicialize a página com filmes
-  fetchMovies(currentPage);
-
-  // Event listener para abrir os detalhes do filme em uma nova página
-  const moviesContainer = document.getElementById("moviesContainer");
-  moviesContainer.addEventListener("click", (event) => {
-    const movieLink = event.target.closest("a[data-movie-id]");
-
-    if (movieLink) {
-      const movieId = movieLink.getAttribute("data-movie-id");
-      if (movieId) {
-        window.open(`movie-details.html?movieId=${movieId}`, "_blank");
-      }
-    }
-  });
-});
+// Inicialize a página com filmes
+fetchMovies(currentPage);
 
 function searchMovies(query) {
   const searchUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&page=1&query=${query}`;
@@ -251,7 +253,6 @@ function searchMovies(query) {
 
 const modalElement = document.getElementById("exampleModal");
 
-
 document
   .getElementById("searchBtn")
   .addEventListener("click", function (event) {
@@ -265,8 +266,23 @@ document
       } else {
         console.error("Elemento modal não encontrado.");
       }
-      
     } else {
       searchMovies(searchTerm);
     }
   });
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Event listener para abrir os detalhes do filme em uma nova página
+  const moviesContainer = document.getElementById("moviesContainer");
+  moviesContainer.addEventListener("click", (event) => {
+    const movieLink = event.target.closest(".card-movie");
+
+    if (movieLink) {
+      const movieId = movieLink.getAttribute("data-movie-id");
+      if (movieId) {
+        // Redirecione para a página de detalhes do filme
+        window.location.href = `movie-details.html?movieId=${movieId}`;
+      }
+    }
+  });
+});
