@@ -245,6 +245,19 @@ function searchMovies(query) {
 
         const moviesContainer = document.getElementById("moviesContainer");
         moviesContainer.appendChild(movieContainer);
+
+        // Event listener para abrir os detalhes do filme em uma nova página
+        moviesContainer.addEventListener("click", (event) => {
+          const movieContainer = event.target.closest(".card-movie");
+
+          if (movieContainer) {
+            const movieId = movieContainer.getAttribute("data-movie-id");
+            if (movieId) {
+              // Redirecione para a página de detalhes do filme com o ID do filme
+              window.location.href = `movie-details.html?movieId=${movieId}`;
+            }
+          }
+        });
       });
       updatePaginationUI();
     })
